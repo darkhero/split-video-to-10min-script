@@ -8,8 +8,9 @@ $output_name = trim($_SERVER['argv'][2]);
 $getID3 = new getID3;
 $fileData = $getID3->analyze($input_name);
 
-$count = ceil($fileData["playtime_seconds"] / 600);
-$command_str = "mencoder -ss %s -endpos 00:10:00 -oac lavc -ovc lavc -of avi -forceidx {$input_name} -o {$output_name}_%02d.avi";
+$youtube_limit = 15;
+$count = ceil($fileData["playtime_seconds"] / (60*$youtube_limit));
+$command_str = "mencoder -ss %s -endpos 00:{$youtube_limit}:00 -oac lavc -ovc lavc -of avi -forceidx {$input_name} -o {$output_name}_%02d.avi";
 $child = 0;
 for($i = 0;$i < $count;$i++){
 	$pid = pcntl_fork();
@@ -19,7 +20,7 @@ for($i = 0;$i < $count;$i++){
 		$child++;
 		continue;
 	}else{
-		$start_time = strftime("%T",$i*600-3600*8);
+		$start_time = strftime("%T",$i*(60*$youtube_limit)-3600*8);
 		$command = sprintf($command_str,$start_time,$i+1)."\n";
 	//	echo $command;
 		shell_exec($command);

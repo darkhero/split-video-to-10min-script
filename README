@@ -1,0 +1,8 @@
+Require php-cli , php-getid3 , mencoder
+Use PHP and mencoder split video file to each 10 minutes.
+
+Will add auto upload youtube script.
+
+split.php usage
+
+split.php <input_video_name> <output_video_name_prefix>
